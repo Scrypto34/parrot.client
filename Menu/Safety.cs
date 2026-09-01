@@ -10,7 +10,7 @@ namespace Parrot.client.Menu
     {
         public static void RPCProtection()
         {
-            if (!PhotonNetwork.InRoom)
+            if (!NetworkSystem.Instance.InRoom)
                 return;
 
             try
@@ -18,6 +18,7 @@ namespace Parrot.client.Menu
                 MonkeAgent.instance.rpcErrorMax = int.MaxValue;
                 MonkeAgent.instance.rpcCallLimit = int.MaxValue;
                 MonkeAgent.instance.logErrorMax = int.MaxValue;
+                MonkeAgent.instance.userRPCCalls.Clear();
 
                 PhotonNetwork.MaxResendsBeforeDisconnect = int.MaxValue;
                 PhotonNetwork.QuickResends = int.MaxValue;
