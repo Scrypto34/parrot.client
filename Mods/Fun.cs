@@ -260,6 +260,179 @@ namespace Parrot.client.Mods
             GorillaTagger.Instance.myVRRig.SendRPC("RPC_InitializeNoobMaterial", RpcTarget.All, new object[] { R, G, B });
         }
 
+        private static GameObject drawRightPointer;
+        private static GameObject drawLeftPointer;
+        private static readonly List<GameObject> drawings = new List<GameObject>();
+        private static Color drawColor = Color.white;
+        private static int drawCurrentColor;
+        private static bool drawColorCooldown;
+
+        public static void Draw()
+        {
+            if (GTPlayer.Instance == null || ControllerInputPoller.instance == null)
+                return;
+
+            if (!ControllerInputPoller.instance.rightGrab)
+            {
+                if (drawRightPointer != null) UnityEngine.Object.Destroy(drawRightPointer);
+                drawRightPointer = null;
+                if (drawLeftPointer != null) UnityEngine.Object.Destroy(drawLeftPointer);
+                drawLeftPointer = null;
+                drawColorCooldown = false;
+                return;
+            }
+
+            if (drawRightPointer == null) drawRightPointer = MakeOrb();
+            if (drawLeftPointer == null) drawLeftPointer = MakeOrb();
+
+            drawRightPointer.transform.position = GTPlayer.Instance.RightHand.controllerTransform.position;
+            drawLeftPointer.transform.position = GTPlayer.Instance.LeftHand.controllerTransform.position;
+            SetOrbColor(drawRightPointer, drawColor);
+            SetOrbColor(drawLeftPointer, drawColor);
+
+            GameObject rightDot = MakeOrb();
+            rightDot.transform.position = GTPlayer.Instance.RightHand.controllerTransform.position;
+            SetOrbColor(rightDot, drawColor);
+            drawings.Add(rightDot);
+
+            if (ControllerInputPoller.instance.leftGrab)
+            {
+                GameObject leftDot = MakeOrb();
+                leftDot.transform.position = GTPlayer.Instance.LeftHand.controllerTransform.position;
+                SetOrbColor(leftDot, drawColor);
+                drawings.Add(leftDot);
+            }
+
+            if (ControllerInputPoller.instance.rightControllerPrimaryButton)
+            {
+                if (!drawColorCooldown)
+                {
+                    drawCurrentColor = (drawCurrentColor + 1) % 13;
+                    drawColor = (drawCurrentColor == 1) ? Color.blue : Color.white;
+                    drawColorCooldown = true;
+                }
+                return;
+            }
+
+            drawColorCooldown = false;
+        }
+
+        public static void StopDraw()
+        {
+            if (drawRightPointer != null) UnityEngine.Object.Destroy(drawRightPointer);
+            drawRightPointer = null;
+            if (drawLeftPointer != null) UnityEngine.Object.Destroy(drawLeftPointer);
+            drawLeftPointer = null;
+            foreach (GameObject dot in drawings) if (dot != null) UnityEngine.Object.Destroy(dot);
+            drawings.Clear();
+        }
+
+        private static GameObject motionTrailObj;
+        private static TrailRenderer motionTrail;
+
+        public static void MotionTrail()
+        {
+            if (GorillaTagger.Instance == null || GorillaTagger.Instance.bodyCollider == null)
+                return;
+
+            if (motionTrail == null)
+            {
+                motionTrailObj = new GameObject("ParrotMotionTrail");
+                motionTrailObj.hideFlags = HideFlags.HideAndDontSave;
+                motionTrail = motionTrailObj.AddComponent<TrailRenderer>();
+                motionTrail.time = 0.7f;
+                motionTrail.startWidth = 0.35f;
+                motionTrail.endWidth = 0f;
+                motionTrail.minVertexDistance = 0.05f;
+                motionTrail.numCapVertices = 4;
+                motionTrail.autodestruct = false;
+                motionTrail.receiveShadows = false;
+                motionTrail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                motionTrail.material = new Material(Shader.Find("GUI/Text Shader"));
+            }
+
+            motionTrailObj.transform.position = GorillaTagger.Instance.bodyCollider.transform.position;
+            float mScale = GTPlayer.Instance != null ? GTPlayer.Instance.scale : 1f;
+            motionTrail.startWidth = 0.35f * mScale;
+
+            Color mc;
+            try { mc = Parrot.client.Settings.backgroundColor.GetCurrentColor(); }
+            catch { mc = Color.cyan; }
+            motionTrail.startColor = mc;
+            Color mend = mc; mend.a = 0f;
+            motionTrail.endColor = mend;
+        }
+
+        public static void MotionTrailStop()
+        {
+            if (motionTrailObj != null) UnityEngine.Object.Destroy(motionTrailObj);
+            motionTrailObj = null;
+            motionTrail = null;
+        }
+
+        private const int OrbCount = 5;
+        private static GameObject[] orbs;
+
+        public static void OrbitBalls()
+        {
+            if (GorillaTagger.Instance == null || GorillaTagger.Instance.bodyCollider == null)
+                return;
+
+            if (orbs == null)
+            {
+                orbs = new GameObject[OrbCount];
+                for (int i = 0; i < OrbCount; i++) orbs[i] = MakeOrb();
+            }
+
+            Vector3 center = GorillaTagger.Instance.bodyCollider.transform.position;
+            float scale = GTPlayer.Instance != null ? GTPlayer.Instance.scale : 1f;
+            float radius = 0.9f * scale;
+            float t = Time.time * 2f;
+
+            Color c;
+            try { c = Parrot.client.Settings.backgroundColor.GetCurrentColor(); }
+            catch { c = Color.cyan; }
+
+            for (int i = 0; i < OrbCount; i++)
+            {
+                if (orbs[i] == null) orbs[i] = MakeOrb();
+                float a = t + i * (Mathf.PI * 2f / OrbCount);
+                float y = Mathf.Sin(t * 1.5f + i) * 0.3f * scale;
+                orbs[i].transform.position = center + new Vector3(Mathf.Cos(a) * radius, y, Mathf.Sin(a) * radius);
+                orbs[i].transform.localScale = Vector3.one * 0.1f * scale;
+                SetOrbColor(orbs[i], c);
+            }
+        }
+
+        public static void OrbitBallsStop()
+        {
+            if (orbs != null)
+                for (int i = 0; i < orbs.Length; i++)
+                    if (orbs[i] != null) UnityEngine.Object.Destroy(orbs[i]);
+            orbs = null;
+        }
+
+        private static GameObject MakeOrb()
+        {
+            GameObject orb = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            orb.transform.localScale = Vector3.one * 0.1f;
+            UnityEngine.Object.Destroy(orb.GetComponent<Rigidbody>());
+            UnityEngine.Object.Destroy(orb.GetComponent<Collider>());
+            Material mat = new Material(Shader.Find("GorillaTag/UberShader"));
+            mat.EnableKeyword("_EMISSION");
+            orb.GetComponent<Renderer>().material = mat;
+            return orb;
+        }
+
+        private static void SetOrbColor(GameObject obj, Color col)
+        {
+            Renderer r = obj.GetComponent<Renderer>();
+            if (r == null) return;
+            r.material.color = col;
+            if (r.material.HasProperty("_BaseColor")) r.material.SetColor("_BaseColor", col);
+            if (r.material.HasProperty("_EmissionColor")) r.material.SetColor("_EmissionColor", col);
+        }
+
 
         static Dictionary<string, string> modsForModCheck = new Dictionary<string, string> {
 
