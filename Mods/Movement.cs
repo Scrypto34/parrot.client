@@ -342,6 +342,35 @@ namespace Parrot.client.Mods
                 teleportGunPressed = false;
         }
 
+        private static bool doubleJumpUsed;
+        private static bool doubleJumpAPrev;
+
+        public static void DoubleJump()
+        {
+            if (GTPlayer.Instance == null || GorillaTagger.Instance == null || ControllerInputPoller.instance == null)
+                return;
+
+            float scale = GTPlayer.Instance.scale;
+            Vector3 origin = GTPlayer.Instance.bodyCollider.transform.position;
+
+            bool grounded = Physics.Raycast(origin, Vector3.down, 1.3f * scale, ~0, QueryTriggerInteraction.Ignore);
+            if (grounded)
+                doubleJumpUsed = false;
+
+            bool aPressed = ControllerInputPoller.instance.rightControllerPrimaryButton;
+
+            if (aPressed && !doubleJumpAPrev && !grounded && !doubleJumpUsed)
+            {
+                Rigidbody rb = GorillaTagger.Instance.rigidbody;
+                Vector3 v = rb.linearVelocity;
+                v.y = 6.8f * scale;
+                rb.linearVelocity = v;
+                doubleJumpUsed = true;
+            }
+
+            doubleJumpAPrev = aPressed;
+        }
+
         public static void SpeedBoost()
         {
             GorillaLocomotion.GTPlayer.Instance.maxJumpSpeed = 8f;
