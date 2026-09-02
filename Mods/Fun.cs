@@ -72,6 +72,7 @@ namespace Parrot.client.Mods
         private static Color holdSkinOldColor = Color.white;
         private static readonly Color ghostMonkeyColor = new Color(1f, 1f, 1f, 0.5f);
         private static readonly Color invisibleMonkeyColor = new Color(1f, 1f, 1f, 0.06f);
+        private static GameObject holdDecoy;
 
         private static bool RightPrimaryHeld()
         {
@@ -147,18 +148,52 @@ namespace Parrot.client.Mods
                 if (!holdSkinActive)
                 {
                     holdSkinOldColor = mat.color;
+                    SpawnHoldDecoy(rig);
                     SetMaterialTransparent(mat, true);
                     holdSkinActive = true;
                 }
 
-                mat.color = invisibleMonkeyHeld ? invisibleMonkeyColor : ghostMonkeyColor;
+                Color c = mat.color;
+                c.a = 0f;
+                mat.color = c;
             }
             else if (holdSkinActive)
             {
+                RemoveHoldDecoy();
                 mat.color = holdSkinOldColor;
                 SetMaterialTransparent(mat, false);
                 holdSkinActive = false;
             }
+        }
+
+        private static void SpawnHoldDecoy(VRRig rig)
+        {
+            if (holdDecoy != null || rig.mainSkin == null)
+                return;
+
+            SkinnedMeshRenderer smr = rig.mainSkin;
+
+            Mesh baked = new Mesh();
+            smr.BakeMesh(baked);
+
+            holdDecoy = new GameObject("HoldDecoy");
+            holdDecoy.transform.position = smr.transform.position;
+            holdDecoy.transform.rotation = smr.transform.rotation;
+            holdDecoy.transform.localScale = smr.transform.lossyScale;
+
+            holdDecoy.AddComponent<MeshFilter>().mesh = baked;
+
+            MeshRenderer mr = holdDecoy.AddComponent<MeshRenderer>();
+            Material copy = new Material(smr.material);
+            copy.color = holdSkinOldColor;
+            mr.material = copy;
+        }
+
+        private static void RemoveHoldDecoy()
+        {
+            if (holdDecoy != null)
+                UnityEngine.Object.Destroy(holdDecoy);
+            holdDecoy = null;
         }
 
         private static void SetMaterialTransparent(Material mat, bool transparent)
