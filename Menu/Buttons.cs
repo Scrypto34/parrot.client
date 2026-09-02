@@ -131,6 +131,7 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Disable Stationary WASD Fly", toolTip = "When enabled, WASD fly falls when you stop moving instead of hovering."},
                 new ButtonInfo { buttonText = "Platforms (RG)", method =() => Movement.Platforms(), toolTip = "Creates platforms under your hands."},
                 new ButtonInfo { buttonText = "Teleport Gun (RG)", method =() => Movement.TeleportGun(), toolTip = "Teleport to the location targeted by the gun."},
+                new ButtonInfo { buttonText = "Motion Trail", method =() => Mods.MotionTrail.Apply(), disableMethod =() => Mods.MotionTrail.Stop(), toolTip = "Leaves a glowing trail behind you in your menu theme color as you move."},
                 new ButtonInfo { buttonText = "Speed Boost", method =() => Movement.SpeedBoost(), toolTip = "Increases your jump speed."},
                 new ButtonInfo { buttonText = "IShowSpeedJR", method =() => Movement.IshowSpeedJR(), toolTip = "Greatly increases your jump speed."},
                 new ButtonInfo { buttonText = "Walk On Water", method =() => Movement.WalkOnWater(), toolTip = "Allows you to walk on water."},
