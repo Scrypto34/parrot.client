@@ -27,6 +27,32 @@ namespace Parrot.client.Mods
 
         public static float grappleSpeed = 16f;
 
+        public static float flyTowardSpeed = 15f;
+
+        public static void FlyTowardGun()
+        {
+            Parrot.client.GunTools.Gunlib.StartBothGuns(() =>
+            {
+                if (GorillaTagger.Instance == null)
+                    return;
+
+                VRRig target = Parrot.client.GunTools.Gunlib.LockedPlayer;
+                Vector3 targetPos;
+
+                if (target != null && !target.isLocal && !target.isOfflineVRRig)
+                    targetPos = target.transform.position;
+                else if (Parrot.client.GunTools.Gunlib.nray.collider != null)
+                    targetPos = Parrot.client.GunTools.Gunlib.nray.point;
+                else
+                    return;
+
+                Vector3 from = GorillaTagger.Instance.bodyCollider.transform.position;
+                Vector3 dir = targetPos - from;
+                if (dir.magnitude > 0.6f)
+                    GorillaTagger.Instance.rigidbody.linearVelocity = dir.normalized * flyTowardSpeed;
+            }, true);
+        }
+
         public static void GrappleGun()
         {
             Parrot.client.GunTools.Gunlib.StartBothGuns(() =>

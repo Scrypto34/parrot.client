@@ -133,6 +133,7 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Teleport Gun (RG)", method =() => Movement.TeleportGun(), toolTip = "Teleport to the location targeted by the gun."},
                 new ButtonInfo { buttonText = "Motion Trail", method =() => Fun.MotionTrail(), disableMethod =() => Fun.MotionTrailStop(), toolTip = "Leaves a glowing trail behind you in your menu theme color as you move."},
                 new ButtonInfo { buttonText = "Double Jump", method =() => Movement.DoubleJump(), toolTip = "Press A (right primary) in the air to jump again."},
+                new ButtonInfo { buttonText = "Fly Toward Gun", method =() => Movement.FlyTowardGun(), toolTip = "Hold grip to aim at a player, pull the trigger to fly toward them."},
                 new ButtonInfo { buttonText = "Speed Boost", method =() => Movement.SpeedBoost(), toolTip = "Increases your jump speed."},
                 new ButtonInfo { buttonText = "IShowSpeedJR", method =() => Movement.IshowSpeedJR(), toolTip = "Greatly increases your jump speed."},
                 new ButtonInfo { buttonText = "Walk On Water", method =() => Movement.WalkOnWater(), toolTip = "Allows you to walk on water."},
