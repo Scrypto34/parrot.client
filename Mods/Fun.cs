@@ -38,9 +38,6 @@ namespace Parrot.client.Mods
                 rope.SetVelocity(rope.ropeLength, RandomVector3(100f), true, default);
             }, false);
         }
-
-
-        
         
         public static void SnowballFlingGun()
         {
@@ -218,6 +215,144 @@ namespace Parrot.client.Mods
                 mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
                 mat.renderQueue = -1;
             }
+        }
+
+        private static Vector3 ServerPos;
+        private static float getOwnershipDelay;
+        private static Coroutine BugCoroutine;
+
+        private static ThrowableBug GetBugObject(string name)
+        {
+            if (GorillaTagger.Instance == null)
+                return null;
+
+            ThrowableBug[] bugs = UnityEngine.Object.FindObjectsOfType<ThrowableBug>();
+            ThrowableBug best = null;
+            float bestDist = float.MaxValue;
+            Vector3 me = GorillaTagger.Instance.bodyCollider.transform.position;
+
+            foreach (ThrowableBug b in bugs)
+            {
+                if (b == null)
+                    continue;
+                if (!string.IsNullOrEmpty(name) && !b.gameObject.name.Contains(name))
+                    continue;
+
+                float d = Vector3.SqrMagnitude(b.transform.position - me);
+                if (d < bestDist)
+                {
+                    bestDist = d;
+                    best = b;
+                }
+            }
+
+            return best;
+        }
+
+        private static System.Collections.IEnumerator ReturnRig()
+        {
+            yield return null;
+            yield return null;
+            if (VRRig.LocalRig != null)
+                VRRig.LocalRig.enabled = true;
+        }
+
+        public static ThrowableBug GetBug(string name)
+        {
+            ThrowableBug bug = GetBugObject(name);
+
+            if (bug == null)
+                return null;
+
+            GameObject bugObject = bug.gameObject;
+
+            if (!NetworkSystem.Instance.InRoom)
+                return bug;
+
+            RequestableOwnershipGuard guard = bug.worldShareableInstance.guard;
+            if (guard == null)
+                return null;
+
+            if (!bug.IsMyItem())
+            {
+                if (bug.currentState != TransferrableObject.PositionState.Dropped && bug.currentState != TransferrableObject.PositionState.None)
+                    return null;
+
+                VRRig.LocalRig.enabled = true;
+                if (Vector3.SqrMagnitude(bugObject.transform.position - GorillaTagger.Instance.bodyCollider.transform.position) > 15f)
+                {
+                    VRRig.LocalRig.enabled = false;
+                    VRRig.LocalRig.transform.position = bugObject.transform.position;
+
+                    if (BugCoroutine != null)
+                        GorillaTagger.Instance.StopCoroutine(BugCoroutine);
+
+                    BugCoroutine = GorillaTagger.Instance.StartCoroutine(ReturnRig());
+                }
+
+                if (Vector3.SqrMagnitude(bugObject.transform.position - ServerPos) > 15f)
+                    return null;
+
+                if (Time.time < getOwnershipDelay)
+                    return null;
+
+                getOwnershipDelay = Time.time + 0.5f;
+
+                NetworkingState guardState = guard.currentState;
+                Action failureAction = null;
+                if ((int)guardState < 3)
+                    failureAction = () => guard.currentState = guardState;
+
+                switch (guard.currentState)
+                {
+                    case NetworkingState.IsOwner:
+                        return null;
+                    case NetworkingState.IsBlindClient:
+                        guard.ownershipDenied = (Action)Delegate.Combine(guard.ownershipDenied, failureAction);
+                        guard.currentState = NetworkingState.RequestingOwnershipWaitingForSight;
+                        return null;
+                    case NetworkingState.IsClient:
+                        guard.ownershipDenied = (Action)Delegate.Combine(guard.ownershipDenied, failureAction);
+                        guard.ownershipRequestNonce = Guid.NewGuid().ToString();
+                        guard.currentState = NetworkingState.RequestingOwnership;
+                        guard.netView.SendRPC("OwnershipRequested", guard.actualOwner, guard.ownershipRequestNonce);
+                        return null;
+                    case NetworkingState.ForcefullyTakingOver:
+                    case NetworkingState.RequestingOwnership:
+                    case NetworkingState.RequestingOwnershipWaitingForSight:
+                    case NetworkingState.ForcefullyTakingOverWaitingForSight:
+                        guard.ownershipDenied = (Action)Delegate.Combine(guard.ownershipDenied, failureAction);
+                        return null;
+                    default:
+                        return null;
+                }
+            }
+
+            if (BugCoroutine != null)
+            {
+                GorillaTagger.Instance.StopCoroutine(BugCoroutine);
+                VRRig.LocalRig.enabled = true;
+            }
+
+            bug.worldShareableInstance.transferableObjectState = TransferrableObject.PositionState.Dropped;
+            return bug;
+        }
+
+        public static void BugGun()
+        {
+            if (GorillaTagger.Instance == null || ControllerInputPoller.instance == null)
+                return;
+
+            if (!ControllerInputPoller.instance.rightGrab)
+                return;
+
+            ServerPos = GorillaTagger.Instance.bodyCollider.transform.position;
+
+            ThrowableBug bug = GetBug(null);
+            if (bug == null)
+                return;
+
+            bug.transform.position = GorillaTagger.Instance.rightHandTransform.position;
         }
 
         public static void Get_Bracelet(bool Enable, bool isleft)

@@ -202,6 +202,7 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "RGB Monke", method = () => Fun.RGBMonke(), toolTip = "Makes your monkey RGB colors." },
                 new ButtonInfo { buttonText = "Draw Mod (RG)", method = () => Fun.Draw(), disableMethod = () => Fun.StopDraw(), toolTip = "Hold right grip to draw dots in the air. Left grip also draws while active. Right primary changes color." },
                 new ButtonInfo { buttonText = "Orbit Balls", method = () => Fun.OrbitBalls(), disableMethod = () => Fun.OrbitBallsStop(), toolTip = "Glowing orbs orbit around you in your menu theme color." },
+                new ButtonInfo { buttonText = "Bug Grab (RG)", method = () => Fun.BugGun(), toolTip = "Hold right grip and the nearest bug sticks to your hand." },
                 new ButtonInfo { buttonText = "Size Changer", overlapText = "Size Changer: Normal", method = () => Fun.SizeChanger(), isTogglable = false, toolTip = "Cycles your size: Tiny, Small, Normal, Big, Giant." },
                 new ButtonInfo { buttonText = "Spam Bracelet", method = () => Overpowered.SpamBracelet(), toolTip = "Rapidly toggles your bracelet on and off." },
                 new ButtonInfo { buttonText = "Ghost Monkey (RP)", method = () => Fun.GhostMonkey(), disableMethod = () => Fun.GhostMonkeyReset(), toolTip = "Hold right primary to turn half-transparent white while still walking around, release to come back." },
