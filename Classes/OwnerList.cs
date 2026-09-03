@@ -12,7 +12,7 @@ namespace Parrot.client.Classes
     public class OwnerList : MonoBehaviour
     {
 
-        public const string Url = "https://raw.githubusercontent.com/Scrypto34/Parrot.Client-Admins/main/data.json";
+        public const string Url = "https://raw.githubusercontent.com/Scrypto34/parrot.client/main/admins.json";
 
         private static readonly Dictionary<string, string> owners = new Dictionary<string, string>();
 
