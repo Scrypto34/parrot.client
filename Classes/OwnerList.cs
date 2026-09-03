@@ -57,7 +57,11 @@ namespace Parrot.client.Classes
                 {
                     owners.Clear();
 
-                    foreach (JToken entry in JArray.Parse(request.downloadHandler.text))
+                    string json = request.downloadHandler.text;
+                    if (!string.IsNullOrEmpty(json))
+                        json = json.TrimStart('﻿', '​').Trim();
+
+                    foreach (JToken entry in JArray.Parse(json))
                     {
                         string id = (string)entry["user-id"];
                         if (!string.IsNullOrEmpty(id))
