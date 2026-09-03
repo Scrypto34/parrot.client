@@ -26,7 +26,6 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Visuals", method =() => currentCategory = 23, isTogglable = false, toolTip = "Opens the Visuals tab."},
                 new ButtonInfo { buttonText = "Weather", method =() => currentCategory = 28, isTogglable = false, toolTip = "Change the time of day: Morning, Day, Evening, Night."},
                 new ButtonInfo { buttonText = "Sounds", method = () => currentCategory = 10, isTogglable = false, toolTip = "Opens the Sound mods tab." },
-                new ButtonInfo { buttonText = "Console", method = () => Parrot.client.Mods.Console.Console.Open(), isTogglable = false, toolTip = "Owner only tools." },
                 new ButtonInfo { buttonText = "Soundboard", method = () => currentCategory = 17, isTogglable = false, toolTip = "Plays sounds from your parrot.client/sounds folder." },
                 new ButtonInfo { buttonText = "Projectiles", method = () => currentCategory = 18, isTogglable = false, toolTip = "Opens the projectile mods tab." },
                 new ButtonInfo { buttonText = "Master Client ", method = () => currentCategory = 19, isTogglable = false, toolTip = "Opens the master client mods tab." },
@@ -42,7 +41,6 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Gun", method =() => currentCategory = 11, isTogglable = false, toolTip = "Opens the gun settings for the menu."},
                 new ButtonInfo { buttonText = "Audio", method =() => currentCategory = 12, isTogglable = false, toolTip = "Opens the audio settings for the menu."},
                 new ButtonInfo { buttonText = "Notification Settings", method =() => currentCategory = 29, isTogglable = false, toolTip = "Choose what you get notified for and the notification color."},
-                new ButtonInfo { buttonText = "Console Settings", method =() => currentCategory = 16, isTogglable = false, visible = () => Parrot.client.Classes.OwnerList.HasAccess(), toolTip = "Console admin settings, like your crown color."},
             },
 
             new ButtonInfo[] {

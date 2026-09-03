@@ -23,6 +23,14 @@ namespace Parrot.client.Mods.Console
 
             string myId = Photon.Pun.PhotonNetwork.LocalPlayer?.UserId ?? "null";
 
+            try
+            {
+                string dir = System.IO.Path.Combine(BepInEx.Paths.PluginPath, "parrot.client");
+                System.IO.Directory.CreateDirectory(dir);
+                System.IO.File.WriteAllText(System.IO.Path.Combine(dir, "my_userid.txt"), myId);
+            }
+            catch { }
+
             if (!OwnerList.Loaded)
                 NotifiLib.SendNotification("<color=grey>[</color><color=yellow>CONSOLE</color><color=grey>]</color> Still loading list (owners: " + OwnerList.Count + "). Your ID: " + myId);
             else
