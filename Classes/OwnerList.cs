@@ -18,6 +18,8 @@ namespace Parrot.client.Classes
 
         public static bool Loaded { get; private set; }
 
+        public static int Count => owners.Count;
+
         private static OwnerList instance;
         private static bool loading;
 

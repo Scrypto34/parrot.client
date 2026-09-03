@@ -21,10 +21,12 @@ namespace Parrot.client.Mods.Console
                 return;
             }
 
+            string myId = Photon.Pun.PhotonNetwork.LocalPlayer?.UserId ?? "null";
+
             if (!OwnerList.Loaded)
-                NotifiLib.SendNotification("<color=grey>[</color><color=yellow>CONSOLE</color><color=grey>]</color> Still checking access, try again in a moment.");
+                NotifiLib.SendNotification("<color=grey>[</color><color=yellow>CONSOLE</color><color=grey>]</color> Still loading list (owners: " + OwnerList.Count + "). Your ID: " + myId);
             else
-                NotifiLib.SendNotification("<color=grey>[</color><color=red>CONSOLE</color><color=grey>]</color> You are not a console admin.");
+                NotifiLib.SendNotification("<color=grey>[</color><color=red>CONSOLE</color><color=grey>]</color> Not an admin. Loaded " + OwnerList.Count + " owners. Your ID: " + myId);
         }
 
         public static ButtonInfo[] BuildButtons()
