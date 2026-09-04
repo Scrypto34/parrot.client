@@ -21,6 +21,22 @@ namespace Parrot.client.Mods.Settings
 
         public static bool gunLock = true;
 
+        public static bool noGunLine = false;
+
+        public static void ToggleNoGunLine()
+        {
+            noGunLine = !noGunLine;
+            RefreshNoGunLine();
+            try { Classes.ThemeChanger.SaveConfigSilent(); } catch { }
+        }
+
+        public static void RefreshNoGunLine()
+        {
+            var button = GetIndex("No Gun Line");
+            if (button != null)
+                button.overlapText = "No Gun Line (" + (noGunLine ? "On" : "Off") + ")";
+        }
+
         public static void ToggleGunLock()
         {
             gunLock = !gunLock;

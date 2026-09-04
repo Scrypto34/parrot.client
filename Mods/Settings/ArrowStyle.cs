@@ -7,7 +7,7 @@ namespace Parrot.client.Mods.Settings
     {
         public static int index = 0;
 
-        public static readonly string[] Names = { "Default", "Side" };
+        public static readonly string[] Names = { "Default", "Side", "Chevron" };
 
         public static void Cycle()
         {

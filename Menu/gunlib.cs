@@ -96,7 +96,14 @@ namespace Parrot.client.GunTools
                 return;
             }
             if (spherepointer == null) CreatePointer();
-            if (trailLine == null) CreateTrail();
+
+            if (Mods.Settings.Gun.noGunLine)
+            {
+                if (trailObj != null) UnityEngine.Object.Destroy(trailObj);
+                trailObj = null;
+                trailLine = null;
+            }
+            else if (trailLine == null) CreateTrail();
             Vector3 handPos = GorillaTagger.Instance.rightHandTransform.position;
             Vector3 targetPos = handPos;
 

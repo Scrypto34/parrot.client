@@ -13,7 +13,7 @@ namespace Parrot.client.Menu
         {
             if (!PhotonNetwork.InRoom)
                 return;
-
+        
             try
             {
                 

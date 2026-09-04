@@ -9,7 +9,12 @@ namespace Parrot.client.Mods
     public class VRRigMods
     {
         private static Vector3? oldLocalPosition;
-
+        
+        public static void LongArms()
+        {
+            
+        }
+        
         public static void PCButtonClick()
         {
             if (Mouse.current == null)

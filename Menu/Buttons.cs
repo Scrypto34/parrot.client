@@ -56,6 +56,11 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Menu Smoothing", overlapText = "Menu Smoothing: Off", method =() => Mods.Settings.Smoothing.Cycle(), isTogglable = false, toolTip = "Makes the menu smoothly follow your hand. Off, Low, Medium, High."},
                 new ButtonInfo { buttonText = "Arrow Style", overlapText = "Arrow Style: Default", method =() => Mods.Settings.ArrowStyle.Cycle(), isTogglable = false, toolTip = "Switches the page arrows between Default and big Side arrows."},
                 new ButtonInfo { buttonText = "Menu Size", overlapText = "Menu Size: Normal", method =() => Mods.Settings.MenuScale.Cycle(), isTogglable = false, toolTip = "Changes how wide the whole menu is. Scales everything so the UI stays intact."},
+                new ButtonInfo { buttonText = "Wide Menu", toolTip = "Makes the menu wider without making it taller."},
+                new ButtonInfo { buttonText = "Bg Menu Color", overlapText = "Bg Menu Color: Theme", method =() => Mods.Settings.MenuColors.CycleBg(), isTogglable = false, toolTip = "Changes the menu background color. Theme uses your current theme."},
+                new ButtonInfo { buttonText = "Button Color", overlapText = "Button Color: Theme", method =() => Mods.Settings.MenuColors.CycleButton(), isTogglable = false, toolTip = "Changes the menu button color. Theme uses your current theme."},
+                new ButtonInfo { buttonText = "Text Color", overlapText = "Text Color: Theme", method =() => Mods.Settings.MenuColors.CycleText(), isTogglable = false, toolTip = "Changes the menu text color. Theme uses your current theme."},
+                new ButtonInfo { buttonText = "Button Outline", enabled = true, toolTip = "Shows an outline around buttons when Rounded Corners is off. Turn off for a flat look."},
                 new ButtonInfo { buttonText = "Button Animations", enableMethod =() => buttonAnimations = true, disableMethod =() => buttonAnimations = false, enabled = buttonAnimations, toolTip = "Makes every button pop in when the menu opens."},
                 new ButtonInfo { buttonText = "Menu Font", overlapText = "Menu Font: Default", method =() => Mods.Settings.Fonts.ChangeMenuFont(), isTogglable = false, toolTip = "Cycles through the fonts in Resources/Server/Fonts."},
                 new ButtonInfo { buttonText = "Open Animation", overlapText = "Open Animation: Grow", method =() => Mods.Settings.OpenAnim.Cycle(), isTogglable = false, toolTip = "Cycles the menu open animation."},
@@ -254,6 +259,7 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Gun Color", overlapText = "Gun Color: Theme", method =() => Mods.Settings.GunColor.Cycle(), isTogglable = false, toolTip = "Changes the gun pointer color. Normal: green while holding trigger, red when not."},
                 new ButtonInfo { buttonText = "Gun Size", overlapText = "Gun Size: Normal", method =() => Mods.Settings.GunSize.Cycle(), isTogglable = false, toolTip = "Changes the size of the gun pointer and trail."},
                 new ButtonInfo { buttonText = "Gun Lock", overlapText = "Gun Lock (On)", method =() => Mods.Settings.Gun.ToggleGunLock(), isTogglable = false, toolTip = "On: guns lock onto players you aim at. Off: free aim - point anywhere."},
+                new ButtonInfo { buttonText = "No Gun Line", overlapText = "No Gun Line (Off)", method =() => Mods.Settings.Gun.ToggleNoGunLine(), isTogglable = false, toolTip = "On: hides the gun trail line so only the pointer ball shows."},
             },
 
             new ButtonInfo[] {

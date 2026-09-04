@@ -161,6 +161,8 @@ namespace Parrot.client.Menu
                 Destroy(menu.GetComponent<BoxCollider>());
                 Destroy(menu.GetComponent<Renderer>());
                 float menuMult = Mods.Settings.MenuScale.Multiplier;
+                float wideMult = (GetIndex("Wide Menu")?.enabled ?? false) ? 1.8f : 1f;
+                menuWideMult = wideMult;
                 menu.transform.localScale = new Vector3(0.1f, 0.3f * menuMult, 0.3825f * menuMult);
 
                 menuBackground = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -168,7 +170,7 @@ namespace Parrot.client.Menu
                 Destroy(menuBackground.GetComponent<BoxCollider>());
                 menuBackground.transform.parent = menu.transform;
                 menuBackground.transform.rotation = Quaternion.identity;
-                menuBackground.transform.localScale = menuSize;
+                menuBackground.transform.localScale = new Vector3(menuSize.x, menuSize.y * wideMult, menuSize.z);
                 menuBackground.GetComponent<Renderer>().material.color = backgroundColor.colors[0].color;
                 menuBackground.transform.position = new Vector3(0.05f, 0f, 0f);
 
@@ -206,7 +208,7 @@ namespace Parrot.client.Menu
                 text.resizeTextMinSize = 0;
                 RectTransform component = text.GetComponent<RectTransform>();
                 component.localPosition = Vector3.zero;
-                component.sizeDelta = new Vector2(0.28f, 0.05f);
+                component.sizeDelta = new Vector2(0.28f * wideMult, 0.05f);
                 component.position = new Vector3(0.06f, 0f, 0.165f);
                 component.rotation = Quaternion.Euler(new Vector3(180f, 90f, 90f));
 
@@ -245,7 +247,7 @@ namespace Parrot.client.Menu
                         disconnectbutton.GetComponent<BoxCollider>().isTrigger = true;
                         disconnectbutton.transform.parent = menu.transform;
                         disconnectbutton.transform.rotation = Quaternion.identity;
-                        disconnectbutton.transform.localScale = new Vector3(0.09f, 0.9f, 0.08f);
+                        disconnectbutton.transform.localScale = new Vector3(0.09f, 0.9f * wideMult, 0.08f);
                         disconnectbutton.transform.localPosition = new Vector3(0.56f, 0f, 0.6f);
                         Decorate(disconnectbutton);
                         disconnectbutton.GetComponent<Renderer>().material.color = buttonColors[0].colors[0].color;
@@ -277,11 +279,12 @@ namespace Parrot.client.Menu
                     }
 
                     bool sideArrows = Mods.Settings.ArrowStyle.index == 1;
-                    Vector3 prevPos = sideArrows ? new Vector3(0.56f, 0.68f, 0f) : new Vector3(0.56f, 0.25f, -0.60f);
-                    Vector3 nextPos = sideArrows ? new Vector3(0.56f, -0.68f, 0f) : new Vector3(0.56f, -0.25f, -0.60f);
+                    bool chevron = Mods.Settings.ArrowStyle.index == 2;
+                    Vector3 prevPos = sideArrows ? new Vector3(0.56f, 0.68f * wideMult, 0f) : new Vector3(0.56f, 0.25f, -0.60f);
+                    Vector3 nextPos = sideArrows ? new Vector3(0.56f, -0.68f * wideMult, 0f) : new Vector3(0.56f, -0.25f, -0.60f);
                     Vector3 sideScale = sideArrows ? new Vector3(0.09f, 0.18f, 1.0f) : new Vector3(0.09f, 0.30f, 0.08f);
-                    Vector3 prevIcon = sideArrows ? new Vector3(0.064f, 0.204f, 0.003f) : new Vector3(0.064f, 0.075f, -0.2295f);
-                    Vector3 nextIcon = sideArrows ? new Vector3(0.064f, -0.204f, 0.003f) : new Vector3(0.064f, -0.075f, -0.2295f);
+                    Vector3 prevIcon = sideArrows ? new Vector3(0.064f, 0.204f * wideMult, 0.003f) : new Vector3(0.064f, 0.075f, -0.2295f);
+                    Vector3 nextIcon = sideArrows ? new Vector3(0.064f, -0.204f * wideMult, 0.003f) : new Vector3(0.064f, -0.075f, -0.2295f);
 
                     GameObject gameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     if (!UnityInput.Current.GetKey(keyboardButton))
@@ -299,7 +302,7 @@ namespace Parrot.client.Menu
                     colorChanger = gameObject.AddComponent<ColorChanger>();
                     colorChanger.colors = buttonColors[0];
 
-                    CreatePageArrow("left3.png", "<", prevIcon);
+                    CreatePageArrow(chevron ? "" : "left3.png", chevron ? "<<<<<<" : "<", prevIcon);
 
                     gameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     if (!UnityInput.Current.GetKey(keyboardButton))
@@ -319,7 +322,7 @@ namespace Parrot.client.Menu
                     colorChanger = gameObject.AddComponent<ColorChanger>();
                     colorChanger.colors = buttonColors[0];
 
-                    CreatePageArrow("right3.png", ">", nextIcon);
+                    CreatePageArrow(chevron ? "" : "right3.png", chevron ? ">>>>>>" : ">", nextIcon);
 
                     gameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     if (!UnityInput.Current.GetKey(keyboardButton))
@@ -341,7 +344,7 @@ namespace Parrot.client.Menu
 
                     ButtonInfo[] activeButtons = VisibleButtons(currentCategory).Skip(pageNumber * buttonsPerPage).Take(buttonsPerPage).ToArray();
                     for (int i = 0; i < activeButtons.Length; i++)
-                        CreateButton(i * 0.1f, activeButtons[i]);
+                        CreateButton(i * 0.1f, activeButtons[i], wideMult);
 
                     RenderPinnedButtons();
 
@@ -359,6 +362,7 @@ namespace Parrot.client.Menu
 
         public static bool animateOpen;
         public static bool menuJustPlaced;
+        public static float menuWideMult = 1f;
 
         public static ButtonInfo[] VisibleButtons(int category) =>
             buttons[category].Where(button => button.IsVisible).ToArray();
@@ -378,7 +382,7 @@ namespace Parrot.client.Menu
                 if (info == null || !info.IsVisible)
                     continue;
 
-                CreateButton(baseOffset - rendered * 0.1f, info);
+                CreateButton(baseOffset - rendered * 0.1f, info, menuWideMult);
                 rendered++;
             }
         }
@@ -501,7 +505,7 @@ namespace Parrot.client.Menu
             text.resizeTextMinSize = 0;
             RectTransform component = text.GetComponent<RectTransform>();
             component.localPosition = Vector3.zero;
-            component.sizeDelta = new Vector2(.2f, .03f);
+            component.sizeDelta = new Vector2(.2f * widthMul, .03f);
             component.localPosition = new Vector3(.064f, lateralOffset / 2.6f, .111f - offset / 2.6f);
             component.rotation = Quaternion.Euler(new Vector3(180f, 90f, 90f));
         }
@@ -997,7 +1001,7 @@ namespace Parrot.client.Menu
         {
             if (roundedCorners)
                 Classes.RoundedMesh.Apply(target, radius);
-            else
+            else if (GetIndex("Button Outline")?.enabled ?? true)
                 CreateOutline(target);
         }
 

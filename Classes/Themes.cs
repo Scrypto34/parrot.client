@@ -228,7 +228,11 @@ namespace Parrot.client.Classes
             data["gunColor"] = Mods.Settings.GunColor.index;
             data["gunSize"] = Mods.Settings.GunSize.index;
             data["gunLock"] = Mods.Settings.Gun.gunLock;
+            data["noGunLine"] = Mods.Settings.Gun.noGunLine;
             data["notifColor"] = Mods.Settings.Notifs.colorIndex;
+            data["bgColor"] = Mods.Settings.MenuColors.bgIndex;
+            data["buttonColor"] = Mods.Settings.MenuColors.buttonIndex;
+            data["textColor"] = Mods.Settings.MenuColors.textIndex;
             data["notifRoom"] = Notifications.NotifiLib.RoomActivity;
             data["notifMod"] = Notifications.NotifiLib.ModActivity;
             data["pinned"] = string.Join("|", Menu.Main.pinnedButtons);
@@ -312,6 +316,8 @@ namespace Parrot.client.Classes
 
                 if (data.ContainsKey("gunLock"))
                     Mods.Settings.Gun.gunLock = Convert.ToBoolean(data["gunLock"]);
+                if (data.ContainsKey("noGunLine"))
+                    Mods.Settings.Gun.noGunLine = Convert.ToBoolean(data["noGunLine"]);
                 Mods.Settings.GunSize.Apply();
 
                 if (data.ContainsKey("notifColor"))
@@ -321,6 +327,13 @@ namespace Parrot.client.Classes
                 if (data.ContainsKey("notifMod"))
                     Notifications.NotifiLib.ModActivity = Convert.ToBoolean(data["notifMod"]);
                 Mods.Settings.Notifs.Apply();
+
+                if (data.ContainsKey("bgColor"))
+                    Mods.Settings.MenuColors.bgIndex = Convert.ToInt32(data["bgColor"]);
+                if (data.ContainsKey("buttonColor"))
+                    Mods.Settings.MenuColors.buttonIndex = Convert.ToInt32(data["buttonColor"]);
+                if (data.ContainsKey("textColor"))
+                    Mods.Settings.MenuColors.textIndex = Convert.ToInt32(data["textColor"]);
 
                 if (data.ContainsKey("pinned"))
                 {
@@ -339,7 +352,12 @@ namespace Parrot.client.Classes
                 Mods.Settings.GunColor.RefreshLabel();
                 Mods.Settings.GunSize.RefreshLabel();
                 Mods.Settings.Gun.RefreshGunLock();
+                Mods.Settings.Gun.RefreshNoGunLine();
                 Mods.Settings.Notifs.RefreshLabel();
+                Mods.Settings.MenuColors.RefreshBgLabel();
+                Mods.Settings.MenuColors.RefreshButtonLabel();
+                Mods.Settings.MenuColors.RefreshTextLabel();
+                Mods.Settings.MenuColors.ReApply();
 
                 if (data.ContainsKey("mods"))
                 {

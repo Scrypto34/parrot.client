@@ -45,6 +45,14 @@ namespace Parrot.client.Mods
                 if (!n.Contains("board") && !n.Contains("scoreboard") && !n.Contains("leaderboard"))
                     continue;
 
+                if (r.GetComponent("TMP_Text") != null ||
+                    r.GetComponent("TextMeshPro") != null ||
+                    r.GetComponent("TextMeshProUGUI") != null ||
+                    r.GetComponent("Text") != null ||
+                    r.GetComponent("TextMesh") != null ||
+                    n.Contains("text") || n.Contains("label") || n.Contains("name"))
+                    continue;
+
                 boards.Add(r);
 
                 if (!originals.ContainsKey(r) && r.material != null)
