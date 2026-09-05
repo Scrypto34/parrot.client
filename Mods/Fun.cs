@@ -163,6 +163,8 @@ namespace Parrot.client.Mods
             }
         }
 
+      
+        
         private static void SpawnHoldDecoy(VRRig rig)
         {
             if (holdDecoy != null || rig.mainSkin == null)

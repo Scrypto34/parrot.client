@@ -7,6 +7,7 @@ namespace Parrot.client.Classes
         public string buttonText = "-";
         public string overlapText = null;
         public Action method = null;
+        public Action cycleBack = null;
         public Action enableMethod = null;
         public Action disableMethod = null;
         public bool enabled = false;

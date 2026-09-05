@@ -34,6 +34,7 @@ namespace Parrot.client
             Classes.CartiSync.Register();
             Classes.CartiJacksonSync.Register();
             Classes.AdminTags.Init();
+            Classes.DiscordRPC.Start();
         }
     }
 }

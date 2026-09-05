@@ -223,6 +223,8 @@ namespace Parrot.client.Classes
             data["outlineColor"] = Mods.Settings.Outline.colorIndex;
             data["smoothing"] = Mods.Settings.Smoothing.index;
             data["arrowStyle"] = Mods.Settings.ArrowStyle.index;
+            data["arrowIcon"] = Mods.Settings.ArrowIcon.index;
+            data["switchMode"] = Mods.Settings.SwitchMode.index;
             data["menuSize"] = Mods.Settings.MenuScale.index;
             data["buttonAnimations"] = Settings.buttonAnimations;
             data["gunColor"] = Mods.Settings.GunColor.index;
@@ -300,6 +302,10 @@ namespace Parrot.client.Classes
 
                 if (data.ContainsKey("arrowStyle"))
                     Mods.Settings.ArrowStyle.index = Convert.ToInt32(data["arrowStyle"]);
+                if (data.ContainsKey("arrowIcon"))
+                    Mods.Settings.ArrowIcon.index = Convert.ToInt32(data["arrowIcon"]);
+                if (data.ContainsKey("switchMode"))
+                    Mods.Settings.SwitchMode.index = Convert.ToInt32(data["switchMode"]);
 
                 if (data.ContainsKey("menuSize"))
                     Mods.Settings.MenuScale.index = Convert.ToInt32(data["menuSize"]);
@@ -348,6 +354,8 @@ namespace Parrot.client.Classes
                 Mods.Settings.Outline.RefreshLabel();
                 Mods.Settings.Smoothing.RefreshLabel();
                 Mods.Settings.ArrowStyle.RefreshLabel();
+                Mods.Settings.ArrowIcon.RefreshLabel();
+                Mods.Settings.SwitchMode.RefreshLabel();
                 Mods.Settings.MenuScale.RefreshLabel();
                 Mods.Settings.GunColor.RefreshLabel();
                 Mods.Settings.GunSize.RefreshLabel();
@@ -371,6 +379,8 @@ namespace Parrot.client.Classes
                         }
                     }
                 }
+
+                try { Mods.Settings.MenuColors.ReApply(); } catch { }
 
                 try { Menu.Main.RecreateMenu(); } catch { }
 

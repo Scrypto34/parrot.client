@@ -129,7 +129,7 @@ namespace Parrot.client.Menu
                 {
 
                         if (fpsObject != null)
-                            fpsObject.text = "FPS: " + Mathf.Ceil(1f / Time.unscaledDeltaTime).ToString();
+                            fpsObject.text = "Version: " + PluginInfo.Version;
 
                         foreach (ButtonInfo button in buttons
                             .SelectMany(list => list)
@@ -179,8 +179,27 @@ namespace Parrot.client.Menu
                 if (rainbowOutline)
                     CreateRainbowOutline();
 
-            ColorChanger colorChanger = menuBackground.AddComponent<ColorChanger>();
-                colorChanger.colors = backgroundColor;
+            ColorChanger colorChanger = null;
+                if (GetIndex("Bg Gradient")?.enabled ?? false)
+                {
+                    Color bgBase = backgroundColor.colors[0].color;
+                    Color light = Color.Lerp(bgBase, Color.white, 0.3f);
+                    Color dark = Color.Lerp(bgBase, Color.black, 0.6f);
+                    Renderer bgr = menuBackground.GetComponent<Renderer>();
+                    Shader gradShader = Shader.Find("Sprites/Default") ?? Shader.Find("Unlit/Texture") ?? Shader.Find("GUI/Text Shader");
+                    if (gradShader != null)
+                        bgr.material.shader = gradShader;
+                    bgr.material.mainTexture = MakeVerticalGradient(light, dark);
+                    bgr.material.color = Color.white;
+                }
+                else
+                {
+                    colorChanger = menuBackground.AddComponent<ColorChanger>();
+                    colorChanger.colors = backgroundColor;
+                }
+
+                if ((GetIndex("PC UI Bg Theme")?.enabled ?? false) && !UnityEngine.XR.XRSettings.isDeviceActive)
+                    menuBackground.GetComponent<Renderer>().enabled = false;
 
                 canvasObject = new GameObject();
                 canvasObject.transform.parent = menu.transform;
@@ -222,7 +241,7 @@ namespace Parrot.client.Menu
                         }
                     }.AddComponent<Text>();
                     fpsObject.font = currentFont;
-                    fpsObject.text = "FPS: " + Mathf.Ceil(1f / Time.unscaledDeltaTime).ToString();
+                    fpsObject.text = "Version: " + PluginInfo.Version;
                     fpsObject.color = textColors[0];
                     fpsObject.fontSize = 1;
                     fpsObject.supportRichText = true;
@@ -278,13 +297,41 @@ namespace Parrot.client.Menu
                         rectt.rotation = Quaternion.Euler(new Vector3(180f, 90f, 90f));
                     }
 
-                    bool sideArrows = Mods.Settings.ArrowStyle.index == 1;
-                    bool chevron = Mods.Settings.ArrowStyle.index == 2;
-                    Vector3 prevPos = sideArrows ? new Vector3(0.56f, 0.68f * wideMult, 0f) : new Vector3(0.56f, 0.25f, -0.60f);
-                    Vector3 nextPos = sideArrows ? new Vector3(0.56f, -0.68f * wideMult, 0f) : new Vector3(0.56f, -0.25f, -0.60f);
-                    Vector3 sideScale = sideArrows ? new Vector3(0.09f, 0.18f, 1.0f) : new Vector3(0.09f, 0.30f, 0.08f);
-                    Vector3 prevIcon = sideArrows ? new Vector3(0.064f, 0.204f * wideMult, 0.003f) : new Vector3(0.064f, 0.075f, -0.2295f);
-                    Vector3 nextIcon = sideArrows ? new Vector3(0.064f, -0.204f * wideMult, 0.003f) : new Vector3(0.064f, -0.075f, -0.2295f);
+                    int layout = Mods.Settings.ArrowStyle.index;
+                    bool scryptoFav = layout == 2;
+                    bool sideArrows = layout == 1;
+                    bool homeText = scryptoFav;
+
+                    int arrowIcon = Mods.Settings.ArrowIcon.index;
+                    if (scryptoFav && arrowIcon == 0) arrowIcon = 1;
+                    string leftArrowImg = arrowIcon == 1 ? "" : (arrowIcon == 2 ? "arrow2left.png" : "left3.png");
+                    string rightArrowImg = arrowIcon == 1 ? "" : (arrowIcon == 2 ? "arrow2right.png" : "right3.png");
+
+                    Vector3 prevPos, nextPos, sideScale, prevIcon, nextIcon;
+                    if (sideArrows)
+                    {
+                        prevPos = new Vector3(0.56f, 0.68f * wideMult, 0f);
+                        nextPos = new Vector3(0.56f, -0.68f * wideMult, 0f);
+                        sideScale = new Vector3(0.09f, 0.18f, 1.0f);
+                        prevIcon = new Vector3(0.064f, 0.204f * wideMult, 0.003f);
+                        nextIcon = new Vector3(0.064f, -0.204f * wideMult, 0.003f);
+                    }
+                    else if (scryptoFav)
+                    {
+                        prevPos = new Vector3(0.56f, 0.30f, -0.60f);
+                        nextPos = new Vector3(0.56f, -0.30f, -0.60f);
+                        sideScale = new Vector3(0.09f, 0.28f, 0.08f);
+                        prevIcon = new Vector3(0.064f, 0.09f, -0.2295f);
+                        nextIcon = new Vector3(0.064f, -0.09f, -0.2295f);
+                    }
+                    else
+                    {
+                        prevPos = new Vector3(0.56f, 0.25f, -0.60f);
+                        nextPos = new Vector3(0.56f, -0.25f, -0.60f);
+                        sideScale = new Vector3(0.09f, 0.30f, 0.08f);
+                        prevIcon = new Vector3(0.064f, 0.075f, -0.2295f);
+                        nextIcon = new Vector3(0.064f, -0.075f, -0.2295f);
+                    }
 
                     GameObject gameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     if (!UnityInput.Current.GetKey(keyboardButton))
@@ -302,7 +349,7 @@ namespace Parrot.client.Menu
                     colorChanger = gameObject.AddComponent<ColorChanger>();
                     colorChanger.colors = buttonColors[0];
 
-                    CreatePageArrow(chevron ? "" : "left3.png", chevron ? "<<<<<<" : "<", prevIcon);
+                    CreatePageArrow(leftArrowImg, "<", prevIcon);
 
                     gameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     if (!UnityInput.Current.GetKey(keyboardButton))
@@ -322,7 +369,7 @@ namespace Parrot.client.Menu
                     colorChanger = gameObject.AddComponent<ColorChanger>();
                     colorChanger.colors = buttonColors[0];
 
-                    CreatePageArrow(chevron ? "" : "right3.png", chevron ? ">>>>>>" : ">", nextIcon);
+                    CreatePageArrow(rightArrowImg, ">", nextIcon);
 
                     gameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     if (!UnityInput.Current.GetKey(keyboardButton))
@@ -331,7 +378,7 @@ namespace Parrot.client.Menu
                     gameObject.GetComponent<BoxCollider>().isTrigger = true;
                     gameObject.transform.parent = menu.transform;
                     gameObject.transform.rotation = Quaternion.identity;
-                    gameObject.transform.localScale = new Vector3(0.09f, 0.16f, 0.08f);
+                    gameObject.transform.localScale = homeText ? new Vector3(0.09f, 0.28f, 0.08f) : new Vector3(0.09f, 0.16f, 0.08f);
                     gameObject.transform.localPosition = new Vector3(0.56f, 0f, -0.60f);
                     Decorate(gameObject);
                     gameObject.GetComponent<Renderer>().material.color = buttonColors[0].colors[0].color;
@@ -340,11 +387,24 @@ namespace Parrot.client.Menu
                     colorChanger = gameObject.AddComponent<ColorChanger>();
                     colorChanger.colors = buttonColors[0];
 
-                    CreatePageArrow("home-button.png", "H", new Vector3(0.064f, 0f, -0.2295f), textColors[0]);
+                    CreatePageArrow(homeText ? "" : "home-button.png", homeText ? "Home" : "H", new Vector3(0.064f, 0f, -0.2295f), textColors[0]);
 
                     ButtonInfo[] activeButtons = VisibleButtons(currentCategory).Skip(pageNumber * buttonsPerPage).Take(buttonsPerPage).ToArray();
+                    bool plusMinus = Mods.Settings.SwitchMode.index == 1;
                     for (int i = 0; i < activeButtons.Length; i++)
-                        CreateButton(i * 0.1f, activeButtons[i], wideMult);
+                    {
+                        ButtonInfo ab = activeButtons[i];
+                        if (plusMinus && ab.cycleBack != null && ab.method != null)
+                        {
+                            CreateButton(i * 0.1f, new ButtonInfo { buttonText = "-", toolTip = ab.toolTip }, 0.2f * wideMult, 0.34f * wideMult, ab.cycleBack);
+                            CreateButton(i * 0.1f, ab, 0.5f * wideMult, 0f, () => { });
+                            CreateButton(i * 0.1f, new ButtonInfo { buttonText = "+", toolTip = ab.toolTip }, 0.2f * wideMult, -0.34f * wideMult, ab.method);
+                        }
+                        else
+                        {
+                            CreateButton(i * 0.1f, ab, wideMult);
+                        }
+                    }
 
                     RenderPinnedButtons();
 
@@ -456,7 +516,7 @@ namespace Parrot.client.Menu
             textRect.rotation = rotation;
         }
 
-        public static void CreateButton(float offset, ButtonInfo method, float widthMul = 1f, float lateralOffset = 0f)
+        public static void CreateButton(float offset, ButtonInfo method, float widthMul = 1f, float lateralOffset = 0f, Action directAction = null)
         {
             GameObject gameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
             if (!UnityInput.Current.GetKey(keyboardButton))
@@ -469,7 +529,9 @@ namespace Parrot.client.Menu
             gameObject.transform.localScale = new Vector3(0.09f, 0.9f * widthMul, 0.08f);
             gameObject.transform.localPosition = new Vector3(0.56f, lateralOffset, 0.28f - offset);
             Decorate(gameObject);
-            gameObject.AddComponent<Classes.Button>().relatedText = method.buttonText;
+            Classes.Button btnComp = gameObject.AddComponent<Classes.Button>();
+            btnComp.relatedText = method.buttonText;
+            btnComp.directAction = directAction;
 
             ColorChanger colorChanger = gameObject.AddComponent<ColorChanger>();
             colorChanger.colors = method.enabled ? buttonColors[1] : buttonColors[0];
@@ -487,7 +549,7 @@ namespace Parrot.client.Menu
             if (method.overlapText != null)
                 text.text = method.overlapText;
 
-            if (widthMul < 0.99f && !string.IsNullOrEmpty(method.buttonText))
+            if (widthMul < 0.3f && !string.IsNullOrEmpty(method.buttonText))
                 text.text = method.buttonText.Substring(0, 1);
 
             text.supportRichText = true;
@@ -504,9 +566,10 @@ namespace Parrot.client.Menu
             text.resizeTextForBestFit = true;
             text.resizeTextMinSize = 0;
             RectTransform component = text.GetComponent<RectTransform>();
+            bool glyph = method.buttonText == "-" || method.buttonText == "+";
             component.localPosition = Vector3.zero;
-            component.sizeDelta = new Vector2(.2f * widthMul, .03f);
-            component.localPosition = new Vector3(.064f, lateralOffset / 2.6f, .111f - offset / 2.6f);
+            component.sizeDelta = glyph ? new Vector2(0.12f, 0.05f) : new Vector2(.2f * widthMul, .03f);
+            component.localPosition = new Vector3(.064f, lateralOffset / 4.5f, .111f - offset / 2.6f);
             component.rotation = Quaternion.Euler(new Vector3(180f, 90f, 90f));
         }
 
@@ -995,6 +1058,21 @@ namespace Parrot.client.Menu
             Gradient gradient = new Gradient();
             gradient.SetKeys(colorKeys, alphaKeys);
             line.colorGradient = gradient;
+        }
+
+        private static Texture2D MakeVerticalGradient(Color top, Color bottom, int height = 128)
+        {
+            Texture2D tex = new Texture2D(2, height);
+            tex.wrapMode = TextureWrapMode.Clamp;
+            tex.filterMode = FilterMode.Bilinear;
+            for (int y = 0; y < height; y++)
+            {
+                Color c = Color.Lerp(bottom, top, y / (float)(height - 1));
+                tex.SetPixel(0, y, c);
+                tex.SetPixel(1, y, c);
+            }
+            tex.Apply();
+            return tex;
         }
 
         private static void Decorate(GameObject target, float radius = Classes.RoundedMesh.CornerRadius)

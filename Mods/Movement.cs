@@ -21,6 +21,21 @@ namespace Parrot.client.Mods
             }
         }
 
+        public static float fastFlySpeed = 200f;
+
+        public static void FastFly()
+        {
+            if (ControllerInputPoller.instance == null || GTPlayer.Instance == null || GorillaTagger.Instance == null)
+                return;
+
+            if (!ControllerInputPoller.instance.rightControllerPrimaryButton)
+                return;
+
+            GTPlayer.Instance.transform.position += GorillaTagger.Instance.headCollider.transform.forward * (Time.deltaTime * fastFlySpeed);
+            GorillaTagger.Instance.rigidbody.linearVelocity = Vector3.zero;
+        }
+        
+        
         public static float FlySpeed;
 
         public static float pullSpeed = 30f;
@@ -28,9 +43,6 @@ namespace Parrot.client.Mods
         public static float grappleSpeed = 16f;
 
         public static float flyTowardSpeed = 15f;
-
-
-      
         
         
         public static void FlyTowardGun()
@@ -507,6 +519,8 @@ namespace Parrot.client.Mods
             }
         }
 
+        
+        
         public static void CarMonkey()
         {
 
@@ -527,6 +541,7 @@ namespace Parrot.client.Mods
             }
         }
 
+        
         public static void TpToStump()
         {
             if (((ControllerInputPoller)ControllerInputPoller.instance).rightControllerIndexFloat > 0.1f || UnityInput.Current.GetMouseButton(1))

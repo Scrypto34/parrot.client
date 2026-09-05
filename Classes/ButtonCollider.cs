@@ -7,6 +7,7 @@ namespace Parrot.client.Classes
 	public class Button : MonoBehaviour
 	{
 		public string relatedText;
+		public System.Action directAction;
 
 		public static float buttonCooldown = 0f;
 
@@ -29,7 +30,13 @@ namespace Parrot.client.Classes
                 }
                 catch { }
 
-                if (pinMod)
+                if (directAction != null)
+                {
+                    try { directAction.Invoke(); } catch { }
+                    try { Parrot.client.Mods.Settings.Audio.PlayClickSound(); } catch { }
+                    try { RecreateMenu(); } catch { }
+                }
+                else if (pinMod)
                     TogglePin(this.relatedText);
                 else
                     Toggle(this.relatedText);

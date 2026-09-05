@@ -7,7 +7,7 @@ namespace Parrot.client.Mods.Settings
     {
         public static int index = 0;
 
-        public static readonly string[] Names = { "Default", "Side", "Chevron" };
+        public static readonly string[] Names = { "Default", "Side Arrows", "Scrypto's Favorite" };
 
         public static void Cycle()
         {
@@ -27,9 +27,9 @@ namespace Parrot.client.Mods.Settings
 
         public static void RefreshLabel()
         {
-            var button = GetIndex("Arrow Style");
+            var button = GetIndex("Menu Layout");
             if (button != null)
-                button.overlapText = "Arrow Style: " + Names[Mathf.Clamp(index, 0, Names.Length - 1)];
+                button.overlapText = "Menu Layout: " + Names[Mathf.Clamp(index, 0, Names.Length - 1)];
         }
     }
 }

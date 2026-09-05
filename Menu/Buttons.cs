@@ -12,6 +12,7 @@ namespace Parrot.client.Menu
 
         public static ButtonInfo[][] buttons = new ButtonInfo[][]
         {
+            // Main Page
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Settings", method =() => currentCategory = 1, isTogglable = false, toolTip = "Opens the main settings page for the menu."},
                 new ButtonInfo { buttonText = "Room Mods", method =() => currentCategory = 4, isTogglable = false, toolTip = "Opens the room mods tab."},
@@ -31,9 +32,13 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Master Client ", method = () => currentCategory = 19, isTogglable = false, toolTip = "Opens the master client mods tab." },
                 new ButtonInfo { buttonText = "Detected Mods", method = () => currentCategory = 20, isTogglable = false, toolTip = "Opens the detected mods tab." },
                 new ButtonInfo { buttonText = "Client Users", method = () => Mods.ClientUsers.Open(), isTogglable = false, toolTip = "See other menu users' theme and enabled mods." },
+                new ButtonInfo { buttonText = "Credits", method = () => currentCategory = 30, isTogglable = false, toolTip = "The people who made the client." },
 
             },
+            
+            
 
+            // Settings
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Return to Main", method =() => currentCategory = 0, isTogglable = false, toolTip = "Returns to the main page of the menu."},
                 new ButtonInfo { buttonText = "Menu", method =() => currentCategory = 2, isTogglable = false, toolTip = "Opens the settings for the menu."},
@@ -43,27 +48,32 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Notification Settings", method =() => currentCategory = 29, isTogglable = false, toolTip = "Choose what you get notified for and the notification color."},
             },
 
+            // Menu Settings
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Return to Settings", method =() => currentCategory = 1, isTogglable = false, toolTip = "Returns to the main settings page for the menu."},
                 new ButtonInfo { buttonText = "Panic", method =() => Menu.Main.Panic(), isTogglable = false, toolTip = "Instantly disables every mod and resets all settings to default."},
                 new ButtonInfo { buttonText = "Right Hand", enableMethod =() => rightHanded = true, disableMethod =() => rightHanded = false, toolTip = "Puts the menu on your right hand."},
                 new ButtonInfo { buttonText = "Notifications", enableMethod =() => disableNotifications = false, disableMethod =() => disableNotifications = true, enabled = !disableNotifications, toolTip = "Toggles the notifications."},
-                new ButtonInfo { buttonText = "FPS Counter", enableMethod =() => fpsCounter = true, disableMethod =() => fpsCounter = false, enabled = fpsCounter, toolTip = "Toggles the FPS counter."},
+                new ButtonInfo { buttonText = "Version", enableMethod =() => fpsCounter = true, disableMethod =() => fpsCounter = false, enabled = fpsCounter, toolTip = "Shows the client version under the title."},
                 new ButtonInfo { buttonText = "Disconnect Button", enableMethod =() => disconnectButton = true, disableMethod =() => disconnectButton = false, enabled = disconnectButton, toolTip = "Toggles the disconnect button."},
                 new ButtonInfo { buttonText = "Rounded Corners", enableMethod =() => roundedCorners = true, disableMethod =() => roundedCorners = false, enabled = roundedCorners, toolTip = "Rounds the corners of the menu buttons and background."},
                 new ButtonInfo { buttonText = "Theme: Default", method =() => Classes.ThemeChanger.NextTheme(), isTogglable = false, toolTip = "Cycles through available themes."},
                 new ButtonInfo { buttonText = "Theme Mode", overlapText = "Theme Mode: Dark", method =() => Classes.ThemeChanger.ToggleThemeMode(), isTogglable = false, toolTip = "Switches all themes between Dark and Light."},
-                new ButtonInfo { buttonText = "Menu Smoothing", overlapText = "Menu Smoothing: Off", method =() => Mods.Settings.Smoothing.Cycle(), isTogglable = false, toolTip = "Makes the menu smoothly follow your hand. Off, Low, Medium, High."},
-                new ButtonInfo { buttonText = "Arrow Style", overlapText = "Arrow Style: Default", method =() => Mods.Settings.ArrowStyle.Cycle(), isTogglable = false, toolTip = "Switches the page arrows between Default and big Side arrows."},
-                new ButtonInfo { buttonText = "Menu Size", overlapText = "Menu Size: Normal", method =() => Mods.Settings.MenuScale.Cycle(), isTogglable = false, toolTip = "Changes how wide the whole menu is. Scales everything so the UI stays intact."},
+                new ButtonInfo { buttonText = "Menu Smoothing", overlapText = "Menu Smoothing: Off", method =() => Mods.Settings.Smoothing.Cycle(), cycleBack =() => Mods.Settings.Smoothing.Back(), isTogglable = false, toolTip = "Makes the menu smoothly follow your hand. Off, Low, Medium, High."},
+                new ButtonInfo { buttonText = "Menu Layout", overlapText = "Menu Layout: Default", method =() => Mods.Settings.ArrowStyle.Cycle(), cycleBack =() => Mods.Settings.ArrowStyle.Back(), isTogglable = false, toolTip = "Changes the whole layout: Default, Side Arrows, or Scrypto's Favorite (Home text + side arrows)."},
+                new ButtonInfo { buttonText = "Arrow Icon", overlapText = "Arrow Icon: Default", method =() => Mods.Settings.ArrowIcon.Cycle(), isTogglable = false, toolTip = "Changes the arrow look between the default icons and > < text."},
+                new ButtonInfo { buttonText = "Switch Mode", overlapText = "Switch Mode: Default", method =() => Mods.Settings.SwitchMode.Cycle(), isTogglable = false, toolTip = "Default: tap a setting to change it. +/-: settings show - and + buttons on each side."},
+                new ButtonInfo { buttonText = "Menu Size", overlapText = "Menu Size: Normal", method =() => Mods.Settings.MenuScale.Cycle(), cycleBack =() => Mods.Settings.MenuScale.Back(), isTogglable = false, toolTip = "Changes how wide the whole menu is. Scales everything so the UI stays intact."},
                 new ButtonInfo { buttonText = "Wide Menu", toolTip = "Makes the menu wider without making it taller."},
                 new ButtonInfo { buttonText = "Bg Menu Color", overlapText = "Bg Menu Color: Theme", method =() => Mods.Settings.MenuColors.CycleBg(), isTogglable = false, toolTip = "Changes the menu background color. Theme uses your current theme."},
+                new ButtonInfo { buttonText = "Bg Gradient", enableMethod =() => Mods.Settings.MenuColors.ReApply(), disableMethod =() => Mods.Settings.MenuColors.ReApply(), toolTip = "Makes the background a gradient (light to dark) of the bg color instead of solid."},
+                new ButtonInfo { buttonText = "PC UI Bg Theme", toolTip = "On PC only: removes the menu background so just the buttons and text show."},
                 new ButtonInfo { buttonText = "Button Color", overlapText = "Button Color: Theme", method =() => Mods.Settings.MenuColors.CycleButton(), isTogglable = false, toolTip = "Changes the menu button color. Theme uses your current theme."},
                 new ButtonInfo { buttonText = "Text Color", overlapText = "Text Color: Theme", method =() => Mods.Settings.MenuColors.CycleText(), isTogglable = false, toolTip = "Changes the menu text color. Theme uses your current theme."},
                 new ButtonInfo { buttonText = "Button Outline", enabled = true, toolTip = "Shows an outline around buttons when Rounded Corners is off. Turn off for a flat look."},
                 new ButtonInfo { buttonText = "Button Animations", enableMethod =() => buttonAnimations = true, disableMethod =() => buttonAnimations = false, enabled = buttonAnimations, toolTip = "Makes every button pop in when the menu opens."},
                 new ButtonInfo { buttonText = "Menu Font", overlapText = "Menu Font: Default", method =() => Mods.Settings.Fonts.ChangeMenuFont(), isTogglable = false, toolTip = "Cycles through the fonts in Resources/Server/Fonts."},
-                new ButtonInfo { buttonText = "Open Animation", overlapText = "Open Animation: Grow", method =() => Mods.Settings.OpenAnim.Cycle(), isTogglable = false, toolTip = "Cycles the menu open animation."},
+                new ButtonInfo { buttonText = "Open Animation", overlapText = "Open Animation: Grow", method =() => Mods.Settings.OpenAnim.Cycle(), cycleBack =() => Mods.Settings.OpenAnim.Back(), isTogglable = false, toolTip = "Cycles the menu open animation."},
                 new ButtonInfo { buttonText = "Save Config", method =() => Classes.ThemeChanger.SaveConfig(), isTogglable = false, toolTip = "Saves your current theme and mod configuration."},
                 new ButtonInfo { buttonText = "Load Config", method =() => Classes.ThemeChanger.LoadConfig(), isTogglable = false, toolTip = "Loads your saved theme and mod configuration."},
                 new ButtonInfo { buttonText = "Outline", enableMethod =() => rainbowOutline = true, disableMethod =() => rainbowOutline = false, enabled = rainbowOutline, toolTip = "Puts an outline around the menu background."},
@@ -71,16 +81,18 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Custom Boards", method =() => Mods.BoardMod.Apply(), disableMethod =() => Mods.BoardMod.Restore(), toolTip = "Recolors the map boards (stump, etc.) to match your menu theme color."},
             },
 
+            // Mod Settings
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Return to Settings", method =() => currentCategory = 1, isTogglable = false, toolTip = "Returns to the main settings page for the menu."},
 
-                new ButtonInfo { buttonText = "Change Fly Speed", overlapText = "Change Fly Speed [Medium]", method =() => Mods.Settings.Movement.ChangeFlySpeed(), isTogglable = false, toolTip = "Changes the speed of the fly mod."},
-                new ButtonInfo { buttonText = "Wall Walk Speed", overlapText = "Wall Walk Speed [Medium]", method =() => Mods.Settings.Movement.ChangePullSpeed(), isTogglable = false, toolTip = "Changes how hard the Wall Walk mod pushes you forward."},
-                new ButtonInfo { buttonText = "Tag Aura Distance", overlapText = "Tag Aura Distance [Medium]", method =() => Mods.Settings.Movement.ChangeTagAuraDistance(), isTogglable = false, toolTip = "Changes the range of the Tag Aura mod."},
-                new ButtonInfo { buttonText = "Ring Distance", overlapText = "Ring Distance [Medium]", method =() => Mods.Settings.Movement.ChangeRingDistance(), isTogglable = false, toolTip = "Changes the size and tag range of the Aura Ring."},
-                new ButtonInfo { buttonText = "Anti Report Sensitivity", overlapText = "Anti Report Sensitivity [Medium]", method =() => Mods.Settings.Movement.ChangeAntiReportSensitivity(), isTogglable = false, toolTip = "How close a report hand must get before Anti Report disconnects you. Higher = triggers from further."},
+                new ButtonInfo { buttonText = "Change Fly Speed", overlapText = "Change Fly Speed [Medium]", method =() => Mods.Settings.Movement.ChangeFlySpeed(), cycleBack =() => Mods.Settings.Movement.ChangeFlySpeed(-1), isTogglable = false, toolTip = "Changes the speed of the fly mod."},
+                new ButtonInfo { buttonText = "Wall Walk Speed", overlapText = "Wall Walk Speed [Medium]", method =() => Mods.Settings.Movement.ChangePullSpeed(), cycleBack =() => Mods.Settings.Movement.ChangePullSpeed(-1), isTogglable = false, toolTip = "Changes how hard the Wall Walk mod pushes you forward."},
+                new ButtonInfo { buttonText = "Tag Aura Distance", overlapText = "Tag Aura Distance [Medium]", method =() => Mods.Settings.Movement.ChangeTagAuraDistance(), cycleBack =() => Mods.Settings.Movement.ChangeTagAuraDistance(-1), isTogglable = false, toolTip = "Changes the range of the Tag Aura mod."},
+                new ButtonInfo { buttonText = "Ring Distance", overlapText = "Ring Distance [Medium]", method =() => Mods.Settings.Movement.ChangeRingDistance(), cycleBack =() => Mods.Settings.Movement.ChangeRingDistance(-1), isTogglable = false, toolTip = "Changes the size and tag range of the Aura Ring."},
+                new ButtonInfo { buttonText = "Anti Report Sensitivity", overlapText = "Anti Report Sensitivity [Medium]", method =() => Mods.Settings.Movement.ChangeAntiReportSensitivity(), cycleBack =() => Mods.Settings.Movement.ChangeAntiReportSensitivity(-1), isTogglable = false, toolTip = "How close a report hand must get before Anti Report disconnects you. Higher = triggers from further."},
             },
 
+            // Room Mods
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Return to Main", method =() => currentCategory = 0, isTogglable = false, toolTip = "Returns to the main page of the menu."},
 
@@ -120,10 +132,12 @@ namespace Parrot.client.Menu
 
             },
 
+            // Movement Mods
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Return to Main", method =() => currentCategory = 0, isTogglable = false, toolTip = "Returns to the main page of the menu."},
 
                 new ButtonInfo { buttonText = "Fly (RP)", method =() => Movement.Fly(), toolTip = "Fly forward while holding the right primary button."},
+                new ButtonInfo { buttonText = "Fast Fly (RP)", method =() => Movement.FastFly(), toolTip = "Hold right primary to fly forward SUPER fast, almost like teleporting."},
                 new ButtonInfo { buttonText = "Auto Funny Run (RG)", method =() => Fun.AutoFunnyRun(), toolTip = "Hold right grip to swing your hands in a funny running motion."},
                 new ButtonInfo { buttonText = "Auto Elevator Climb (RG)", method =() => Movement.AutoElevatorClimb(), toolTip = "Hold right grip to auto climb like an elevator."},
                 new ButtonInfo { buttonText = "Wall Walk", method =() => Movement.Pull(), toolTip = "Hold right grip to push forward where you look and climb along walls your hands touch."},
@@ -156,6 +170,7 @@ namespace Parrot.client.Menu
 
             },
 
+            // Safety Mods
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Return to Main", method =() => currentCategory = 0, isTogglable = false, toolTip = "Returns to the main page of the menu."},
 
@@ -163,6 +178,7 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Hide Name", enableMethod =() => Safety.HideNameOnLeaderboard(), disableMethod =() => Safety.RestoreName(), toolTip = "Blanks your name on the leaderboard. Turn off to restore it."},
             },
 
+            // Advantage 
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Return to Main", method =() => currentCategory = 0, isTogglable = false, toolTip = "Returns to the main page of the menu."},
                 new ButtonInfo { buttonText = "Tag Gun (RG)", method = () => Advantage.TagGun(), disableMethod = () => Advantage.ReleaseTagGun(), toolTip = "Tags the player youre aiming at." },
@@ -172,8 +188,9 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Tag Self", method = () => Advantage.TagSelf(),isTogglable = true, disableMethod = () => Advantage.ReleaseTagSelf(), toolTip = "Tags yourself." },
                 new ButtonInfo { buttonText = "No Tag On Join", method = () => Advantage.NoTagOnJoin(), toolTip = "No tag on join" },
                 new ButtonInfo { buttonText = "Untag Self", method = () => Advantage.UntagSelf(), toolTip = "Removes the tag/infection from yourself while enabled." },
+                
             },
-
+            // Fun
             new ButtonInfo [] {
                 new ButtonInfo { buttonText = "Return to Main", method =() => currentCategory = 0, isTogglable = false, toolTip = "Returns to the main page of the menu."},
 
@@ -219,11 +236,12 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Break Mod Checkers", method = () => Fun.BreakModCheckers(), toolTip = "Breaks all the mod checkers." },
             },
 
+            // OP Mods
             new ButtonInfo [] {
                 new ButtonInfo { buttonText = "Return to Main", method =() => currentCategory = 0, isTogglable = false, toolTip = "Returns to the main page of the menu."},
 
                
-                new ButtonInfo { buttonText = "Get FP (SS)", method = () => Overpowered.GetFP(), isTogglable = false, toolTip = "Adds the Finger Painter badge to your wardrobe." },
+               //  new ButtonInfo { buttonText = "Get FP (SS)", method = () => Overpowered.GetFP(), isTogglable = false, toolTip = "Adds the Finger Painter badge to your wardrobe." },
                 new ButtonInfo { buttonText = "Guardian Gun (RG)", method = () => Overpowered.GuardianGun(), toolTip = "In Guardian mode, point at a player to make them the guardian." },
                 new ButtonInfo { buttonText = "Unguardian Gun (RG)", method = () => Overpowered.UnguardianGun(), toolTip = "In Guardian mode, point at the guardian to remove them." },
                 new ButtonInfo { buttonText = "Flick Tag Gun (RG)", method = () => Overpowered.FlickTagGun(), toolTip = "Aim at a player and pull the trigger to flick your hand out and tag them." },
@@ -242,6 +260,7 @@ namespace Parrot.client.Menu
 
             },
 
+            // Sound Mods (not sure xd)
             new ButtonInfo [] {
                 new ButtonInfo { buttonText = "Return to Main", method =() => currentCategory = 0, isTogglable = false, toolTip = "Returns to the main page of the menu."},
 
@@ -252,16 +271,18 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Jman spam (RT)", method =() => Sound.JmanSpam(), toolTip = "Spams the Jman screaming sound" },
             },
 
+            // Gun Settings
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Return to Settings", method =() => currentCategory = 1, isTogglable = false, toolTip = "Returns to the main settings page for the menu."},
 
-                new ButtonInfo { buttonText = "Change Gun Type", overlapText = "Change Gun Type [Normal]", method =() => Mods.Settings.Gun.ChangeGunType(), isTogglable = false, toolTip = "Changes the look of the gun trail: Normal, Electric or Wiggly."},
-                new ButtonInfo { buttonText = "Gun Color", overlapText = "Gun Color: Theme", method =() => Mods.Settings.GunColor.Cycle(), isTogglable = false, toolTip = "Changes the gun pointer color. Normal: green while holding trigger, red when not."},
-                new ButtonInfo { buttonText = "Gun Size", overlapText = "Gun Size: Normal", method =() => Mods.Settings.GunSize.Cycle(), isTogglable = false, toolTip = "Changes the size of the gun pointer and trail."},
+                new ButtonInfo { buttonText = "Change Gun Type", overlapText = "Change Gun Type [Normal]", method =() => Mods.Settings.Gun.ChangeGunType(), cycleBack =() => Mods.Settings.Gun.ChangeGunType(-1), isTogglable = false, toolTip = "Changes the look of the gun trail: Normal, Electric or Wiggly."},
+                new ButtonInfo { buttonText = "Gun Color", overlapText = "Gun Color: Theme", method =() => Mods.Settings.GunColor.Cycle(), cycleBack =() => Mods.Settings.GunColor.Back(), isTogglable = false, toolTip = "Changes the gun pointer color. Normal: green while holding trigger, red when not."},
+                new ButtonInfo { buttonText = "Gun Size", overlapText = "Gun Size: Normal", method =() => Mods.Settings.GunSize.Cycle(), cycleBack =() => Mods.Settings.GunSize.Back(), isTogglable = false, toolTip = "Changes the size of the gun pointer and trail."},
                 new ButtonInfo { buttonText = "Gun Lock", overlapText = "Gun Lock (On)", method =() => Mods.Settings.Gun.ToggleGunLock(), isTogglable = false, toolTip = "On: guns lock onto players you aim at. Off: free aim - point anywhere."},
                 new ButtonInfo { buttonText = "No Gun Line", overlapText = "No Gun Line (Off)", method =() => Mods.Settings.Gun.ToggleNoGunLine(), isTogglable = false, toolTip = "On: hides the gun trail line so only the pointer ball shows."},
             },
 
+            // Audio Settings
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Return to Settings", method =() => currentCategory = 1, isTogglable = false, toolTip = "Returns to the main settings page for the menu."},
 
@@ -274,6 +295,7 @@ namespace Parrot.client.Menu
 
             Mods.Console.Console.BuildButtons(),
 
+            // VRRig Mods
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Return to Settings", method =() => currentCategory = 1, isTogglable = false, toolTip = "Returns to the main settings page for the menu."},
 
@@ -284,6 +306,7 @@ namespace Parrot.client.Menu
 
             Mods.Soundboard.BuildButtons(),
 
+            // Projectiles
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Return to Main", method =() => currentCategory = 0, isTogglable = false, toolTip = "Returns to the main page of the menu."},
 
@@ -292,6 +315,7 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Snowball Spam", method =() => Mods.Projectiles.SnowballSpam(), toolTip = "Hold grip (either hand) to spam snowballs. PC: left click for right hand."},
             },
 
+            // Master Mods
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Return to Main", method =() => currentCategory = 0, isTogglable = false, toolTip = "Returns to the main page of the menu."},
 
@@ -300,6 +324,7 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Guardian All (M)", method =() => Overpowered.GuardianAll(), isTogglable = false, toolTip = "You need to be master client to use this but it makes everyone guardian even outside of guardian lobbies."},
             },
 
+            // Detected Mods
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Return to Main", method =() => currentCategory = 0, isTogglable = false, toolTip = "Returns to the main page of the menu."},
 
@@ -314,9 +339,11 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Return to Users", method =() => currentCategory = 21, isTogglable = false, toolTip = "Back to the user list."},
             },
 
+            // Visuals
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Return to Main", method =() => currentCategory = 0, isTogglable = false, toolTip = "Returns to the main page of the menu."},
                 new ButtonInfo { buttonText = "Tracers", method =() => Mods.Visuals.CasualTracers(), disableMethod =() => Mods.Visuals.HideTracers(), toolTip = "Draws a line from your hand to every player."},
+                new ButtonInfo { buttonText = "Stump Text", method =() => Mods.StumpText.Tick(), disableMethod =() => Mods.StumpText.Stop(), toolTip = "Shows floating text in Stump from your parrot.client/stumptext.txt file."},
                 new ButtonInfo { buttonText = "Player ESP", method =() => Mods.Visuals.PlayerESP(), disableMethod =() => Mods.Visuals.HideESP(), toolTip = "Draws a box around every player, visible through walls."},
                 new ButtonInfo { buttonText = "ESP Menu Color", toolTip = "Colors the ESP boxes with your menu theme instead of each player's color."},
                 new ButtonInfo { buttonText = "Thin Tracers", toolTip = "Makes the tracer lines thinner."},
@@ -329,6 +356,7 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Return to Main", method =() => currentCategory = 0, isTogglable = false, toolTip = "Returns to the main page of the menu."},
             },
 
+            // VRRig
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Return to Main", method =() => currentCategory = 0, isTogglable = false, toolTip = "Returns to the main page of the menu."},
                 new ButtonInfo { buttonText = "PC Button Click", method =() => VRRigMods.PCButtonClick(), toolTip = "On PC, hold left click to move your right hand to where you point."},
@@ -349,6 +377,7 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Return to Players", method =() => currentCategory = 26, isTogglable = false, toolTip = "Back to the player list."},
             },
 
+            // Weather
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Return to Main", method =() => currentCategory = 0, isTogglable = false, toolTip = "Returns to the main page of the menu."},
                 new ButtonInfo { buttonText = "Morning", method =() => Mods.Weather.Morning(), isTogglable = false, toolTip = "Sets the time of day to morning."},
@@ -357,12 +386,16 @@ namespace Parrot.client.Menu
                 new ButtonInfo { buttonText = "Night", method =() => Mods.Weather.Night(), isTogglable = false, toolTip = "Sets the time of day to night."},
             },
 
+            // Notification Settings
             new ButtonInfo[] {
                 new ButtonInfo { buttonText = "Return to Settings", method =() => currentCategory = 1, isTogglable = false, toolTip = "Returns to the main settings page for the menu."},
                 new ButtonInfo { buttonText = "Room Activity", enableMethod =() => Notifications.NotifiLib.RoomActivity = true, disableMethod =() => Notifications.NotifiLib.RoomActivity = false, enabled = Notifications.NotifiLib.RoomActivity, toolTip = "Notifications when players join or leave the room."},
                 new ButtonInfo { buttonText = "Mod Activity", enableMethod =() => Notifications.NotifiLib.ModActivity = true, disableMethod =() => Notifications.NotifiLib.ModActivity = false, enabled = Notifications.NotifiLib.ModActivity, toolTip = "Notifications for what mods do (tags, kicks, etc.)."},
-                new ButtonInfo { buttonText = "Notification Color", overlapText = "Notification Color: Purple", method =() => Mods.Settings.Notifs.CycleColor(), isTogglable = false, toolTip = "Changes the accent color of the notifications."},
-            }
+                new ButtonInfo { buttonText = "Notification Color", overlapText = "Notification Color: Purple", method =() => Mods.Settings.Notifs.CycleColor(), cycleBack =() => Mods.Settings.Notifs.BackColor(), isTogglable = false, toolTip = "Changes the accent color of the notifications."},
+            },
+
+            // Credits
+            Mods.Credits.BuildButtons(),
         };
     }
 }

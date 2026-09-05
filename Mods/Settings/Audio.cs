@@ -13,10 +13,16 @@ namespace Parrot.client.Mods.Settings
     public class Audio
     {
 
-        public static readonly Sound[] sounds = new Sound[]
+        public static readonly Sound[] openSounds = new Sound[]
         {
             new Sound { name = "None", fileName = null },
             new Sound { name = "Splash", fileName = "Splash.wav" },
+            new Sound { name = "Gmod", fileName = "Gmod.ogg" },
+        };
+
+        public static readonly Sound[] clickSounds = new Sound[]
+        {
+            new Sound { name = "None", fileName = null },
             new Sound { name = "Tap", fileName = "Tap.wav" },
             new Sound { name = "Click", fileName = "Click.wav" },
             new Sound { name = "Button", fileName = "Button.mp3" },
@@ -25,42 +31,50 @@ namespace Parrot.client.Mods.Settings
             new Sound { name = "Wood", fileName = "Wood.ogg" },
             new Sound { name = "Zoom", fileName = "Zoom.ogg" },
             new Sound { name = "Slider", fileName = "Slider.ogg" },
-            new Sound { name = "Gmod", fileName = "Gmod.ogg" },
+            new Sound { name = "Roblox Button", fileName = "robloxbutton.ogg" },
+            new Sound { name = "Click 2", fileName = "click.ogg" },
+            new Sound { name = "Steal", fileName = "steal.ogg" },
+            new Sound { name = "Sensation", fileName = "sensation.ogg" },
         };
 
         public static int openSoundIndex = 1;
         public static int clickSoundIndex = 0;
 
+        private static Sound[] SoundsFor(bool openSound) => openSound ? openSounds : clickSounds;
+
+        private static Sound GetOpenSound(int index) =>
+            index >= 0 && index < openSounds.Length ? openSounds[index] : openSounds[0];
+
+        private static Sound GetClickSound(int index) =>
+            index >= 0 && index < clickSounds.Length ? clickSounds[index] : clickSounds[0];
+
         public static void PlayOpenSound()
         {
-            PlaySound(openSoundIndex);
-            AudioLib.Preload(GetSound(clickSoundIndex).fileName);
+            AudioLib.Play(GetOpenSound(openSoundIndex).fileName);
+            AudioLib.Preload(GetClickSound(clickSoundIndex).fileName);
         }
 
-        public static void PlayClickSound() => PlaySound(clickSoundIndex);
-
-        private static void PlaySound(int index) => AudioLib.Play(GetSound(index).fileName);
-
-        private static Sound GetSound(int index) =>
-            index >= 0 && index < sounds.Length ? sounds[index] : sounds[0];
+        public static void PlayClickSound() => AudioLib.Play(GetClickSound(clickSoundIndex).fileName);
 
         public static ButtonInfo[] BuildSoundButtons(bool openSound)
         {
+            Sound[] list = SoundsFor(openSound);
+
             List<ButtonInfo> page = new List<ButtonInfo>
             {
                 new ButtonInfo { buttonText = "Return to Audio Settings", method =() => currentCategory = 12, isTogglable = false, toolTip = "Returns to the audio settings page."}
             };
 
-            for (int i = 0; i < sounds.Length; i++)
+            for (int i = 0; i < list.Length; i++)
             {
                 int index = i;
                 page.Add(new ButtonInfo
                 {
-                    buttonText = SoundButtonText(openSound, sounds[index].name),
+                    buttonText = SoundButtonText(openSound, list[index].name),
                     overlapText = SoundButtonLabel(openSound, index),
                     method = () => SelectSound(openSound, index),
                     isTogglable = false,
-                    toolTip = $"Plays {sounds[index].name} when {(openSound ? "the menu opens" : "you press a button")}."
+                    toolTip = $"Plays {list[index].name} when {(openSound ? "the menu opens" : "you press a button")}."
                 });
             }
 
@@ -75,26 +89,29 @@ namespace Parrot.client.Mods.Settings
                 clickSoundIndex = index;
 
             RefreshLabels();
-            PlaySound(index);
+            AudioLib.Play(SoundsFor(openSound)[index].fileName);
         }
 
         public static void RefreshLabels()
         {
             ButtonInfo openNav = GetIndex("Open Sound");
             if (openNav != null)
-                openNav.overlapText = $"Open Sound [{GetSound(openSoundIndex).name}]";
+                openNav.overlapText = $"Open Sound [{GetOpenSound(openSoundIndex).name}]";
 
             ButtonInfo clickNav = GetIndex("Click Sound");
             if (clickNav != null)
-                clickNav.overlapText = $"Click Sound [{GetSound(clickSoundIndex).name}]";
+                clickNav.overlapText = $"Click Sound [{GetClickSound(clickSoundIndex).name}]";
 
-            for (int i = 0; i < sounds.Length; i++)
+            for (int i = 0; i < openSounds.Length; i++)
             {
-                ButtonInfo openButton = GetIndex(SoundButtonText(true, sounds[i].name));
+                ButtonInfo openButton = GetIndex(SoundButtonText(true, openSounds[i].name));
                 if (openButton != null)
                     openButton.overlapText = SoundButtonLabel(true, i);
+            }
 
-                ButtonInfo clickButton = GetIndex(SoundButtonText(false, sounds[i].name));
+            for (int i = 0; i < clickSounds.Length; i++)
+            {
+                ButtonInfo clickButton = GetIndex(SoundButtonText(false, clickSounds[i].name));
                 if (clickButton != null)
                     clickButton.overlapText = SoundButtonLabel(false, i);
             }
@@ -105,8 +122,9 @@ namespace Parrot.client.Mods.Settings
 
         private static string SoundButtonLabel(bool openSound, int index)
         {
+            Sound[] list = SoundsFor(openSound);
             bool selected = index == (openSound ? openSoundIndex : clickSoundIndex);
-            return selected ? $"[{sounds[index].name}]" : sounds[index].name;
+            return selected ? $"[{list[index].name}]" : list[index].name;
         }
     }
 }

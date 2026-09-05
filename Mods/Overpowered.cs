@@ -55,9 +55,7 @@ namespace Parrot.client.Mods
                 VRRig.LocalRig.BreakHandLinks();
                 return;
             }
-
-
-
+            
             SetGrabPatch(true);
 
             VRRig.LocalRig.enabled = false;
@@ -395,6 +393,9 @@ namespace Parrot.client.Mods
             GRElevatorManager.LowestActorNumberInElevator()
                 });
         }
+        
+   
+        
 
         private static float LagDelay;
 
@@ -417,46 +418,46 @@ namespace Parrot.client.Mods
         }
 
 
-        public static void GetFP()
-        {
-            try
-            {
-                CosmeticsController cc = CosmeticsController.instance;
-                if (cc == null || cc.v2_allCosmetics == null)
-                {
-                    NotifiLib.SendNotification("<color=grey>[</color><color=red>FP</color><color=grey>]</color> Cosmetics not loaded yet, try again in a moment.");
-                    return;
-                }
+ //  public static void GetFP()
+ //  {
+ //      try
+ //      {
+ //          CosmeticsController cc = CosmeticsController.instance;
+ //          if (cc == null || cc.v2_allCosmetics == null)
+ //          {
+ //              NotifiLib.SendNotification("<color=grey>[</color><color=red>FP</color><color=grey>]</color> Cosmetics not loaded yet, try again in a moment.");
+ //              return;
+ //          }
 
-                string playFabID = null;
-                string displayName = null;
-                foreach (var info in cc.v2_allCosmetics)
-                {
-                    if (string.IsNullOrEmpty(info.displayName) || string.IsNullOrEmpty(info.playFabID))
-                        continue;
-                    if (info.displayName.ToLowerInvariant().Contains("finger paint"))
-                    {
-                        playFabID = info.playFabID;
-                        displayName = info.displayName;
-                        break;
-                    }
-                }
+ //          string playFabID = null;
+ //          string displayName = null;
+ //          foreach (var info in cc.v2_allCosmetics)
+ //          {
+ //              if (string.IsNullOrEmpty(info.displayName) || string.IsNullOrEmpty(info.playFabID))
+ //                  continue;
+ //              if (info.displayName.ToLowerInvariant().Contains("finger paint"))
+ //              {
+ //                  playFabID = info.playFabID;
+ //                  displayName = info.displayName;
+ //                  break;
+ //              }
+ //          }
 
-                if (playFabID == null)
-                {
-                    NotifiLib.SendNotification("<color=grey>[</color><color=red>FP</color><color=grey>]</color> Finger Painter badge not found.");
-                    return;
-                }
+ //          if (playFabID == null)
+ //          {
+ //              NotifiLib.SendNotification("<color=grey>[</color><color=red>FP</color><color=grey>]</color> Finger Painter badge not found.");
+ //              return;
+ //          }
 
-                cc.AddTempUnlockToWardrobe(playFabID);
-                try { cc.UpdateWardrobeModelsAndButtons(); } catch { }
-                NotifiLib.SendNotification("<color=grey>[</color><color=green>FP</color><color=grey>]</color> " + displayName + " added to your wardrobe - go wear it like a normal badge.");
-            }
-            catch (Exception exc)
-            {
-                NotifiLib.SendNotification("<color=grey>[</color><color=red>FP</color><color=grey>]</color> Failed: " + exc.Message);
-            }
-        }
+ //          cc.AddTempUnlockToWardrobe(playFabID);
+ //          try { cc.UpdateWardrobeModelsAndButtons(); } catch { }
+ //          NotifiLib.SendNotification("<color=grey>[</color><color=green>FP</color><color=grey>]</color> " + displayName + " added to your wardrobe - go wear it like a normal badge.");
+ //      }
+ //      catch (Exception exc)
+ //      {
+ //          NotifiLib.SendNotification("<color=grey>[</color><color=red>FP</color><color=grey>]</color> Failed: " + exc.Message);
+ //      }
+ //  }
 
         private static float guardianDelay;
 
